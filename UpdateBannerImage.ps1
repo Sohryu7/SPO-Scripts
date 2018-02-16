@@ -23,12 +23,12 @@ function UpdateBannerImage {
 		$content = $content.replace("[","&#91;").replace("]","&#93;")
 		# decode 
 		$dec = [System.Web.HttpUtility]::HtmlDecode($content)
-		# to JSON
+		# from JSON
 		$jnContent = ConvertFrom-Json $dec
 		
 		#set values
 		if (!$jnContent.serverProcessedContent) {
-			$jnContent.serverProcessedContent = {};
+			$jnContent.serverProcessedContent = New-Object PSObject;
 		}
 		if (!$jnContent.serverProcessedContent.imageSources) {
 			$jnContent.serverProcessedContent.imageSources = New-Object PSObject;
@@ -48,7 +48,7 @@ function UpdateBannerImage {
 		$jnContent.properties | add-member Noteproperty title $curTitle
 		$jnContent.properties | add-member Noteproperty imageSourceType 2
 		
-		# from JSON
+		# to JSON
 		$newContent = $jnContent | ConvertTo-Json -Compress
 		$enc = [System.Web.HttpUtility]::HtmlEncode($newContent)
 		$enc = $enc.replace("{","&#123;").replace(":","&#58;").replace("}","&#125;").replace("[","&#91;").replace("]","&#93;")
